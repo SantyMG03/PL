@@ -1,7 +1,4 @@
-# Ignora todo por defecto
-*
+#Ignora .in .out
+.in
+.out
 
-# Excepcion con los .java
-!*.java
-
-!.gitignore
