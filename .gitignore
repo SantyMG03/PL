@@ -1,0 +1,7 @@
+# Ignora todo por defecto
+*
+
+# Excepcion con los .java
+!*.java
+
+!.gitignore
