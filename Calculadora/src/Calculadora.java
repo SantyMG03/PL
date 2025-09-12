@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class Calculadora {
 
@@ -24,12 +24,12 @@ public class Calculadora {
                 if (line.isEmpty()) continue;
 
                 try {
-                    int res = eval(line);
+                    int res = evaluate(line);
                     pw.println(res);
                 } catch (ArithmeticException e) {
-                    pw.println("Division por cero");
+                    pw.println("Error: Division por cero");
                 } catch (IllegalArgumentException e) {
-                    pw.println("Expresion invalida -> " + line);
+                    pw.println("Error: Expresion invalida -> " + line);
                 }
             }
 
@@ -43,30 +43,70 @@ public class Calculadora {
         }
     }
 
-    private static int eval(String line) {
-        line = line.replaceAll("\\s+", "");
+    private static int evaluate(String line) {
+        line = line.replaceAll("\\s+", ""); // Quita todos los espacios sobrantes
 
-        String regex = "(-?\\d+)([+\\-*/])(-?\\d+)";
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(regex);
-        java.util.regex.Matcher m = p.matcher(line);
+        List<String> l = infixToPostfix(line);
 
-        if (!m.matches()) {
-            throw new IllegalArgumentException();
-        }
+        return evalList(l);
+    }
 
-        int a = Integer.parseInt(m.group(1));
-        String op = m.group(2);
-        int b = Integer.parseInt(m.group(3));
+    private static List<String> infixToPostfix(String expr) {
+        List<String> output = new ArrayList<>();
+        Deque<Character> stack = new ArrayDeque<>();
 
-        switch (op) {
-            case "+": return a + b;
-            case "-": return a - b;
-            case "*": return a * b;
-            case "/": {
-                if (b == 0) throw new ArithmeticException();
-                return a / b;
+        StringBuilder num = new StringBuilder();
+        for (int i = 0; i < expr.length(); i++) {
+            char c = expr.charAt(i);
+
+            if (Character.isDigit(c) || (c == '-' && (i == 0 || "+-*/".indexOf(expr.charAt(i - 1)) >= 0))) {
+                // parte de un número (incluyendo negativos)
+                num.append(c);
+            } else if ("+-*/".indexOf(c) >= 0) {
+                if (num.length() > 0) {
+                    output.add(num.toString());
+                    num.setLength(0);
+                }
+                while (!stack.isEmpty() && precedence(stack.peek()) >= precedence(c)) {
+                    output.add(String.valueOf(stack.pop()));
+                }
+                stack.push(c);
+            } else {
+                throw new IllegalArgumentException();
             }
-            default: throw new IllegalArgumentException();
         }
+        if (num.length() > 0) {
+            output.add(num.toString());
+        }
+        while (!stack.isEmpty()) {
+            output.add(String.valueOf(stack.pop()));
+        }
+        return output;
+    }
+
+    private static int evalList(List<String> tokens) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (String token: tokens) {
+            if (token.matches("-?\\d+")) {
+                stack.push(Integer.parseInt(token));
+            } else {
+                int b = stack.pop();
+                int a = stack.pop();
+                switch (token) {
+                    case "+": stack.push(a + b); break;
+                    case "-": stack.push(a - b); break;
+                    case "*": stack.push(a * b); break;
+                    case "/":
+                        if (b == 0) throw new ArithmeticException();
+                        stack.push(a / b);
+                        break;
+                }
+            }
+        }
+        return stack.pop();
+    }
+
+    private static int precedence(char op) {
+        return (op == '+' || op == '-') ? 1 : 2;
     }
 }
