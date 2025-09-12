@@ -59,8 +59,8 @@ public class Calculadora {
         for (int i = 0; i < expr.length(); i++) {
             char c = expr.charAt(i);
 
-            if (Character.isDigit(c) || (c == '-' && (i == 0 || "+-*/".indexOf(expr.charAt(i - 1)) >= 0))) {
-                // parte de un número (incluyendo negativos)
+            if (Character.isDigit(c) || (c == '-' && (i == 0 || "+-*/(".indexOf(expr.charAt(i - 1)) >= 0))) {
+                // parte de un número (incluye negativos)
                 num.append(c);
             } else if ("+-*/".indexOf(c) >= 0) {
                 if (num.length() > 0) {
@@ -71,6 +71,19 @@ public class Calculadora {
                     output.add(String.valueOf(stack.pop()));
                 }
                 stack.push(c);
+            } else if (c == '(') {
+                stack.push(c);
+            } else if (c == ')') {
+                if (num.length() > 0) {
+                    output.add(num.toString());
+                    num.setLength(0);
+                }
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    output.add(String.valueOf(stack.pop()));
+                }
+                if (stack.isEmpty() || stack.pop() != '(') {
+                    throw new IllegalArgumentException(); // parentesis desbalanceados
+                }
             } else {
                 throw new IllegalArgumentException();
             }
@@ -79,7 +92,11 @@ public class Calculadora {
             output.add(num.toString());
         }
         while (!stack.isEmpty()) {
-            output.add(String.valueOf(stack.pop()));
+            char op = stack.pop();
+            if (op == '(' || op == ')') {
+                throw new IllegalArgumentException(); // parentesis desbalanceados
+            }
+            output.add(String.valueOf(op));
         }
         return output;
     }
@@ -100,6 +117,7 @@ public class Calculadora {
                         if (b == 0) throw new ArithmeticException();
                         stack.push(a / b);
                         break;
+                    default: throw new IllegalArgumentException();
                 }
             }
         }
@@ -107,6 +125,8 @@ public class Calculadora {
     }
 
     private static int precedence(char op) {
-        return (op == '+' || op == '-') ? 1 : 2;
+        if (op == '+' || op == '-') return 1;
+        if (op == '*' || op == '/') return 2;
+        return 0;
     }
 }
