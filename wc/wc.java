@@ -29,9 +29,8 @@ public class wc {
                 }
                 else if (yytoken.getToken() == Yytoken.EOL) lines++;
             } 
-            System.out.println(getLines()+"\t"+getWords()+"\t"+getC());
+            System.out.println(getLines()+"\t"+getWords()+"\t"+getC()+" "+ arg[0]);
         } catch (IOException e) {
         }
-        
     }
 }
