@@ -1,9 +1,18 @@
 public class Yytoken {
 
-    private String lexema;
+    public static int EOL = 127;
+    public static int WORD = 128;
 
-    public Yytoken(String lexema) {
+    private String lexema;
+    private int token;
+
+    public Yytoken(int token, String lexema) {
         this.lexema = lexema;
+        this.token = token;
+    }
+
+    public int getToken() {
+        return token;
     }
 
     public String getLexema() {
@@ -11,6 +20,6 @@ public class Yytoken {
     }
 
     public String toString() {
-         return "<"+lexema+">";
+        return "<"+token+","+lexema+">";
     }
 }
