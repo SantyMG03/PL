@@ -34,6 +34,7 @@ Operador = [\+\-\*\/]
                 break;
             default:
                 System.err.println("Error: operador:" + op);
+                break;
         }
         pila.set(auxa, res);
         pila.remove(auxb);
