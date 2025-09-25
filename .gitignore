@@ -1,4 +1,5 @@
 #Ignora .in .out
 .in
 .out
+*.class
 
