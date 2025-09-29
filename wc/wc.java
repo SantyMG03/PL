@@ -26,10 +26,14 @@ public class wc {
                 if (yytoken.getToken() == Yytoken.WORD) {
                     words++;
                     c += lex.yylength();
+                } else if (yytoken.getToken() == Yytoken.EOL) {
+                    lines++;
+                    c += lex.yylength();
+                } else if (yytoken.getToken() == Yytoken.CHARACTER) {
+                    c += lex.yylength();
                 }
-                else if (yytoken.getToken() == Yytoken.EOL) lines++;
-            } 
-            System.out.println(getLines()+"\t"+getWords()+"\t"+getC()+" "+ arg[0]);
+            }
+            System.out.printf(" %d %d %d %s\n", getLines(), getWords(), getC(), arg[0]);
         } catch (IOException e) {
         }
     }

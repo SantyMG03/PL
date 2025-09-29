@@ -2,6 +2,8 @@ public class Yytoken {
 
     public static int EOL = 127;
     public static int WORD = 128;
+    public static int CHARACTER = 129;
+    public static int WHITESPACE = 130;
 
     private String lexema;
     private int token;
