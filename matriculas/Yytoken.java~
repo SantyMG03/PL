@@ -1,0 +1,27 @@
+public class Yytoken {
+    public static final int S1 = 10;
+    public static final int S2 = 20;
+    public static final int S3 = 30;
+    public static final int SEPARADOR = 100;
+    public static final int INVALIDO = 404;
+
+    private String lexema;
+    private int token;
+
+    public Yytoken(int token, String lexema) {
+        this.lexema = lexema;
+        this.token = token;
+    }
+
+    public int getToken() {
+        return token;
+    }
+
+    public String getLexema() {
+        return lexema;
+    }
+
+    public String toString() {
+        return "<"+token+","+lexema+">";
+    }
+}

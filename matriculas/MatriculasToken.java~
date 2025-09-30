@@ -1,0 +1,30 @@
+import java.io.FileReader;
+
+public class MatriculasToken {
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Uso: java Matriculas <fichero_entrada>");
+            System.exit(1);
+        }
+
+        String filename = args[0];
+
+        try {
+            FileReader fr = new FileReader(filename);
+            Yylex lex = new Yylex(fr);
+            Yytoken yytoken = null;
+            while ((yytoken = lex.yylex()) != null) {
+                switch (yytoken.getToken()) {
+                    case Yytoken.S1: System.out.print("S1"); break;
+                    case Yytoken.S2: System.out.print("S2"); break;
+                    case Yytoken.S3: System.out.print("S3"); break;
+                    case Yytoken.SEPARADOR: System.out.print(yytoken.getLexema()); break;
+                    case Yytoken.INVALIDO: System.out.print("X"); break;
+                }
+            }
+            fr.close();
+        } catch (java.io.IOException e) {
+            System.out.println("Error de E/S");
+        }
+    }
+}
