@@ -53,9 +53,8 @@ CHAR	= \'([^\'\\\n]|\\.)*\'
 					jdocBuf = null; 
 					yybegin(YYINITIAL);}
 
-	[^* \t\n\r]+ { jdocBuf.append(yytext()); }
-	\*+			{ jdocBuf.append(yytext()); }
-	[ \t\n\r]+  {/* ignorar espacios, tabs y saltos de línea */}
+	[^*]+		{ jdocBuf.append(yytext()); }
+	\*			{ jdocBuf.append(yytext()); }
 
 	<<EOF>>		{	if(jdocBuf != null) {
 					javadoc += countNonSpace(jdocBuf.toString());
@@ -67,9 +66,8 @@ CHAR	= \'([^\'\\\n]|\\.)*\'
 					mlBuf = null;
 					yybegin(YYINITIAL);}
 
-	[^* \t\n\r]+ { mlBuf.append(yytext()); }
-	\*+			{ mlBuf.append(yytext()); }
-	[ \t\n\r]+  {/* ignorar espacios, tabs y saltos de línea */}
+	[^*]+		{ mlBuf.append(yytext()); }
+	\*			{ mlBuf.append(yytext()); }
 
 	<<EOF>>		{	if(mlBuf != null) {
 					multiLine += countNonSpace(mlBuf.toString());
