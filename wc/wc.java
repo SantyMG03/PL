@@ -25,12 +25,12 @@ public class wc {
             while ((yytoken = lex.yylex()) != null) {
                 if (yytoken.getToken() == Yytoken.WORD) {
                     words++;
-                    c += lex.yylength();
+                    c += yytoken.getLexema().getBytes("UTF-8").length;
                 } else if (yytoken.getToken() == Yytoken.EOL) {
                     lines++;
-                    c += lex.yylength();
+                    c += yytoken.getLexema().getBytes("UTF-8").length;
                 } else if (yytoken.getToken() == Yytoken.CHARACTER) {
-                    c += lex.yylength();
+                    c += yytoken.getLexema().getBytes("UTF-8").length;
                 }
             }
             System.out.printf(" %d %d %d %s\n", getLines(), getWords(), getC(), arg[0]);
